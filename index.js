@@ -1,9 +1,10 @@
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require('express')
 const app = express()
 const cors = require('cors')
-require('dotenv').config()
+
 const port = process.env.PORT || 3000
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+require('dotenv').config()
 
 // midle aware
 app.use(express.json())
@@ -12,7 +13,9 @@ app.use(cors())
 
 
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.sayatpw.mongodb.net/?retryWrites=true&w=majority`;
+
+const uri=
+`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.sayatpw.mongodb.net/?retryWrites=true&w=majority`;   
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -26,7 +29,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    
 
     const toysCollection = client.db("toys").collection('toyProduct')
     const allToysCollection = client.db("toys").collection('allToys')
@@ -46,30 +49,30 @@ async function run() {
     })
 
     // my Toys section 
-    app.get('/all-toys', async(req, res)=>{
-      const query={}
-      const result= await allToysCollection.find(query).sort({"price":1}).limit(20).toArray()
+    app.get('/all-toys', async (req, res) => {
+      const query = {}
+      const result = await allToysCollection.find(query).sort({ "price": 1 }).limit(20).toArray()
       res.send(result)
     })
 
-    app.get('/all-toys/:id', async(req, res)=>{
-      const id=req.params.id
-      const query={_id:new ObjectId(id)}
-      const result= await allToysCollection.findOne(query)
+    app.get('/all-toys/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: new ObjectId(id) }
+      const result = await allToysCollection.findOne(query)
       res.send(result)
     })
 
-    
+
     app.get('/my-toys', async (req, res) => {
       const query = {}
-      
+
       const result = await allToysCollection.find(query).toArray()
       res.send(result)
     })
     app.get('/my-toys/:email', async (req, res) => {
-      const email = req.params.email  
+      const email = req.params.email
       const query = { email: email }
-      const result = await allToysCollection.find(query).sort({"price":1}).toArray()
+      const result = await allToysCollection.find(query).sort({ "price": 1 }).toArray()
       res.send(result)
     })
     app.get('/my-toys/search', async (req, res) => {
@@ -83,8 +86,8 @@ async function run() {
         res.status(500).json({ error: 'Failed to search toys' });
       }
     });
-   
-   
+
+
 
 
 
@@ -132,21 +135,21 @@ async function run() {
         }
 
       }
-    
+
       const result = await allToysCollection.updateOne(query, updateToys, options)
       res.send(result)
     })
 
-    
-    app.delete('/update/:id', async(req, res)=>{
-      const id =req.params.id
-      const query={ _id: new ObjectId(id)}
-     
-      const result= await allToysCollection.deleteOne(query)
+
+    app.delete('/update/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: new ObjectId(id) }
+
+      const result = await allToysCollection.deleteOne(query)
       res.send(result)
     })
 
-   
+
 
 
 
@@ -170,7 +173,7 @@ async function run() {
 
     // all toys
 
-  
+
 
 
 
@@ -189,7 +192,7 @@ async function run() {
 run().catch(console.dir);
 
 app.get('/', async (req, res) => {
-  res.send("hello bro")
+  res.send("Toys server is running ")
 })
 
 
